@@ -1,0 +1,7 @@
+# database
+.db
+.csv
+
+#virtual enviroment
+venv/
+__pycache__/
