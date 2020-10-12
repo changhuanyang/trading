@@ -4,13 +4,15 @@ import requests
 import argparse
 import pandas as pd
 import json
+import datetime
 
 
-def get_daily_data(stock_symbol):
+def get_daily_data(stock_symbol, output_size='full'):
     """ get the daily data
         
         args:
             ticker: US stock symbol
+            output_size: 'full': full histroical data or 'compact': the latest 100 data points
         
         returns:
             df_daily: daily stock price dat
@@ -21,8 +23,8 @@ def get_daily_data(stock_symbol):
 
     """
     api_key = "Y4DEWAV3C4XYQ9YA"
-    url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={}&outputsize=full&apikey={}".format(
-        stock_symbol, api_key
+    url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={}&outputsize={}}&apikey={}}".format(
+        stock_symbol,, output_size, api_key
     )
     response = requests.get(url)
     dic = json.loads(response.text)
@@ -43,6 +45,12 @@ def get_daily_data(stock_symbol):
     )
 
     return df
+
+def get_update_daily_data(stock_symbol, last_update_date):
+    if(datetime.date.today() - last_update_date) > datetime.timedelta(days=100):
+        return get_daily_data(stock_symbol, output_size='full')
+    else:
+        return get_daily_data(stock_symbol, output_size='compact')
 
 
 def main():
