@@ -5,31 +5,14 @@ import sqlite3
 import argparse
 import pandas as pd
 import os
+import datetime
 
-
+import commons
+import database
 import us_symbol_crawler
 import income_statement_crawler
 import cash_flow_crawler
 import balance_sheet_crawler
-
-
-def check_table_exist(conn, table_name):
-    c = conn.cursor()
-
-    # get the count of tables with the name
-    c.execute(
-        """ SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}' """.format(
-            table_name
-        )
-    )
-
-    # if the count is 1, then table exists
-    if c.fetchone()[0] == 1:
-        print("{} table exists.".format(table_name))
-        return True
-    else:
-        print("{} table not exists.".format(table_name))
-        return False
 
 
 def update_income_statement(conn, stock_symbol):
@@ -55,7 +38,17 @@ def update_balance_sheet(conn, stock_symbol):
 def update_symbol(conn, symbol_df):
     """update symbols
     """
-    print("to do done")
+    if database.check_table_exist(conn, "symbol"):
+        print("to be done")
+    else:
+        # assign UID to every symbol
+        symbol_df["UID"] = pd.Series(range(0, symbol_df["symbol"].count()))
+        symbol_df.to_sql("symbol", con=conn, if_exists="replace")
+
+    c = conn.cursor()
+    c.execute("SELECT symbol, UID FROM symbol")
+    print(c.fetchmany(10))
+    # print(c.fetchall())
 
 
 def update_all(conn, stock_symbol):
@@ -64,12 +57,12 @@ def update_all(conn, stock_symbol):
 
 def main():
     parser = argparse.ArgumentParser(description="update data [one stock symbol]")
-    parser.add_argument("--database", type=str, default="us_stock_etf.db")
+    parser.add_argument("--database", type=str, default=commons.DATABASE_FILE)
     parser.add_argument(
         "stock_symbol",
         type=str,
         default=[],
-        nargs="+",
+        nargs="?",
         help="stock symbols, or empty to update for all US symbol",
     )
     args = parser.parse_args()
@@ -77,6 +70,7 @@ def main():
 
     symbol_df = us_symbol_crawler.get_updated_symbols()
     update_symbol(conn, symbol_df)
+    """
     if not args.stock_symbol:
         # updata all
         print("to be done")
@@ -87,6 +81,7 @@ def main():
                 update_all(conn, symbol)
             except:
                 print("{} is not a valid symbol".format(symbol))
+    """
 
 
 if __name__ == "__main__":
