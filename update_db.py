@@ -54,7 +54,7 @@ def update_symbol(conn, symbol_df):
                 values = "'{}','{}',{},'{}',{}".format(
                     values[0], values[1], is_ETF, values[3], new_stockUID
                 )
-                sql = "INSERT INTO symbol (symbol, company, ETF, Exchange, stockUID) VALUES ({})".format(
+                sql = "INSERT INTO symbol (symbol, company, ETF, exchange, stockUID) VALUES ({})".format(
                     values
                 )
                 print(sql)

@@ -42,7 +42,7 @@ def get_us_symbols():
         df = df[df["ETF"].notnull()]
         df["ETF"] = df["ETF"].map({"Y": True, "N": False})
         df = df.rename(columns={"Security Name": "company", "Symbol": "symbol"})
-        df["Exchange"] = "Nasdaq"
+        df["exchange"] = "Nasdaq"
 
         def remove_double_quotation(str):
             return str.strip('"')
@@ -76,11 +76,13 @@ def get_us_symbols():
 
         df = df[df["ETF"].notnull()]
         df["ETF"] = df["ETF"].map({"Y": True, "N": False})
-        df = df.rename(columns={"Security Name": "company", "ACT Symbol": "symbol"})
-        df["Exchange"] = df["Exchange"].map(
+        df = df.rename(
+            columns={"Security Name": "company", "ACT Symbol": "symbol", "Exchange": "exchange"}
+        )
+        df["exchange"] = df["exchange"].map(
             {"A": "NYSE MKT", "N": "NYSE", "P": "NYSE ARCA", "Z": "BATS", "Z": "IEXG"}
         )
-        df = df[df["Exchange"].notnull()]
+        df = df[df["exchange"].notnull()]
 
         def remove_double_quotation(str):
             return str.strip('"')
