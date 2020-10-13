@@ -23,9 +23,9 @@ Only Update certain symbol
 
 there are 5 tables in the database
 
-1. `symbol` : a table with columns ['symbol', 'company', 'ETF', 'exchange','UID']
-2. `dailiy`: a table with columns ['UID', 'date', 'open', 'close', 'high', 'low', 'adjustedClose', 'volume', 'dividendAmount', 'splitCoefficient']
-3. `quarterly_income_statement`: a table with columns ['UID', 'fiscalDateEnding', 'reportedCurrency', 'totalRevenue', 'totalOperatingExpense', 'costOfRevenue', 'grossProfit', 'ebit',
+1. `symbol` : a table with columns ['symbol', 'company', 'ETF', 'exchange','stockUID']
+2. `dailiy`: a table with columns ['stockUID', 'date', 'open', 'close', 'high', 'low', 'adjustedClose', 'volume', 'dividendAmount', 'splitCoefficient']
+3. `quarterly_income_statement`: a table with columns ['stockUID', 'fiscalDateEnding', 'reportedCurrency', 'totalRevenue', 'totalOperatingExpense', 'costOfRevenue', 'grossProfit', 'ebit',
             'netIncome', 'researchAndDevelopment', 'effectOfAccountingCharges',
             'incomeBeforeTax', 'minorityInterest', 'sellingGeneralAdministrative',
             'otherNonOperatingIncome', 'operatingIncome', 'otherOperatingExpense',
@@ -35,7 +35,7 @@ there are 5 tables in the database
             'netIncomeFromContinuingOperations',
             'netIncomeApplicableToCommonShares',
             'preferredStockAndOtherAdjustments']
-4. `quarterly_cash_flow`: a table with columns ['UID', 'fiscalDateEnding', 'reportedCurrency', 'investments',
+4. `quarterly_cash_flow`: a table with columns ['stockUID', 'fiscalDateEnding', 'reportedCurrency', 'investments',
             'changeInLiabilities', 'cashflowFromInvestment',
             'otherCashflowFromInvestment', 'netBorrowings', 'cashflowFromFinancing',
             'otherCashflowFromFinancing', 'changeInOperatingActivities',
@@ -45,7 +45,7 @@ there are 5 tables in the database
             'changeInAccountReceivables', 'changeInNetIncome',
             'capitalExpenditures', 'changeInReceivables', 'changeInExchangeRate',
             'changeInCashAndCashEquivalents']
-5. `quarterly_balance_sheet`: a table with columns ['UID','fiscalDateEnding', 'reportedCurrency', 'totalAssets',
+5. `quarterly_balance_sheet`: a table with columns ['stockUID','fiscalDateEnding', 'reportedCurrency', 'totalAssets',
             'intangibleAssets', 'earningAssets', 'otherCurrentAssets',
             'totalLiabilities', 'totalShareholderEquity',
             'deferredLongTermLiabilities', 'otherCurrentLiabilities', 'commonStock',
