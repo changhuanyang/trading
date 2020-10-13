@@ -109,7 +109,7 @@ def symbol_need_update():
 def get_updated_symbols():
     if symbol_need_update():
         all_symbol_df = get_us_symbols()
-        all_symbol_df.to_csv(commons.UPDATE_SYMBOL_FILE)
+        all_symbol_df.to_csv(commons.UPDATE_SYMBOL_FILE, index=False)
     else:
         all_symbol_df = pd.read_csv(commons.UPDATE_SYMBOL_FILE)
     return all_symbol_df

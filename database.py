@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+import sqlite3
 
 
 def check_table_exist(conn, table_name):
@@ -21,11 +22,8 @@ def check_table_exist(conn, table_name):
 
 
 def get_table_columns(conn, table_name):
-    c = conn.cursor()
 
-    # get the count of tables with the name
-    c.execute(
-        """ SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{}' """.format(table_name)
-    )
-    print(c.fetchall())
+    cursor = conn.execute("select * from {}".format(table_name))
+    names = list(map(lambda x: x[0], cursor.description))
+    print(names)
 

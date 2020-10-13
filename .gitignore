@@ -5,3 +5,6 @@
 #virtual enviroment
 venv/
 __pycache__/
+
+#cache
+.pyc

@@ -39,16 +39,33 @@ def update_symbol(conn, symbol_df):
     """update symbols
     """
     if database.check_table_exist(conn, "symbol"):
-        print("to be done")
-    else:
-        # assign UID to every symbol
-        symbol_df["UID"] = pd.Series(range(0, symbol_df["symbol"].count()))
-        symbol_df.to_sql("symbol", con=conn, if_exists="replace")
+        c = conn.cursor()
+        for row in c.execute("SELECT MAX(stockUID) FROM symbol"):
+            new_stockUID = row[0] + 1
 
-    c = conn.cursor()
-    c.execute("SELECT symbol, UID FROM symbol")
-    print(c.fetchmany(10))
-    # print(c.fetchall())
+        for index, symbol in symbol_df["symbol"].items():
+            c.execute("SELECT COUNT(1) FROM symbol WHERE symbol='{}'".format(symbol))
+            res = c.fetchone()
+            if not res[0]:  # an unseen symbol
+                # Insert a row of data
+                values = [str(value) for value in symbol_df.iloc[index].to_list()]
+                values.append(new_stockUID)
+                is_ETF = 0 if values[2] is "False" else 1
+                values = "'{}','{}',{},'{}',{}".format(
+                    values[0], values[1], is_ETF, values[3], new_stockUID
+                )
+                sql = "INSERT INTO symbol (symbol, company, ETF, Exchange, stockUID) VALUES ({})".format(
+                    values
+                )
+                print(sql)
+                c.execute(sql)
+                # Save (commit) the changes
+                conn.commit()
+
+                new_stockUID += 1
+    else:
+        symbol_df["stockUID"] = pd.Series(range(0, symbol_df["symbol"].count()))
+        symbol_df.to_sql("symbol", con=conn, if_exists="replace")
 
 
 def update_all(conn, stock_symbol):
@@ -69,6 +86,7 @@ def main():
     conn = sqlite3.connect(args.database)
 
     symbol_df = us_symbol_crawler.get_updated_symbols()
+    print(symbol_df.head())
     update_symbol(conn, symbol_df)
     """
     if not args.stock_symbol:
